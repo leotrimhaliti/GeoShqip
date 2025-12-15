@@ -22,6 +22,7 @@ export default function PlayClient() {
   const [round, setRound] = useState<Round | null>(null);
   // Cache for preloaded rounds to ensure instant transitions
   const [roundsCache, setRoundsCache] = useState<Map<number, Round>>(new Map());
+  const [isMapExpanded, setIsMapExpanded] = useState(false);
 
   const [guess, setGuess] = useState<LngLat | null>(null);
   const [reveal, setReveal] = useState<
@@ -300,12 +301,12 @@ export default function PlayClient() {
             {/* Top Bar: Compass (Center) & Score (Right) */}
             <div className="relative flex w-full items-start justify-center">
               {/* Center: Compass */}
-              <div className="pointer-events-auto">
+              <div className="pointer-events-auto scale-75 origin-top transition-transform md:scale-100">
                 <CompassStrip angle={round.compassAngle ?? 0} />
               </div>
 
               {/* Right: Score Board */}
-              <div className="absolute right-0 top-0 pointer-events-auto">
+              <div className="absolute right-0 top-14 pointer-events-auto scale-75 origin-top-right transition-transform md:top-0 md:scale-100">
                 <div className="flex overflow-hidden rounded-md border border-white/20 bg-gradient-to-br from-indigo-900/90 to-purple-900/90 shadow-lg backdrop-blur-md">
                   {/* Round Info */}
                   <div className="flex flex-col items-center justify-center border-r border-white/20 px-5 py-2">
@@ -335,7 +336,39 @@ export default function PlayClient() {
       {/* Guess map (locked to Kosovo + Albania) */}
       <div className="pointer-events-none fixed inset-0 z-50">
         <div className="pointer-events-auto absolute bottom-5 right-5 flex flex-col items-end">
-          <div className="h-[220px] w-[320px] overflow-hidden rounded-2xl shadow-2xl transition-all duration-300 ease-out hover:h-[400px] hover:w-[500px]">
+          <div
+            className={`
+              relative overflow-hidden rounded-xl shadow-2xl transition-all duration-300 ease-out 
+              ${isMapExpanded ? "w-[90vw] h-[50vh]" : "w-32 h-24"} 
+              md:h-[220px] md:w-[320px] md:hover:h-[400px] md:hover:w-[500px]
+            `}
+          >
+            {/* Mobile Expand Overlay (Only visible when small on mobile) */}
+            {!isMapExpanded && (
+              <div
+                onClick={() => setIsMapExpanded(true)}
+                className="absolute inset-0 z-20 flex cursor-pointer items-center justify-center bg-black/10 backdrop-blur-[1px] md:hidden"
+              >
+                <div className="rounded-full bg-black/40 p-1 text-white">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
+                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                  </svg>
+                </div>
+              </div>
+            )}
+
+            {/* Mobile Minimize Button (Only visible when expanded on mobile) */}
+            {isMapExpanded && (
+              <button
+                onClick={() => setIsMapExpanded(false)}
+                className="absolute right-2 top-2 z-20 rounded-full bg-black/60 p-2 text-white backdrop-blur-md md:hidden"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
+                  <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
+                </svg>
+              </button>
+            )}
+
             <GuessMap
               className="h-full w-full"
               guess={guess}
