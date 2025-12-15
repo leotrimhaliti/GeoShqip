@@ -289,7 +289,7 @@ export default function PlayClient() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100">
+    <div className="h-[100dvh] w-screen overflow-hidden bg-black text-zinc-100">
       <StreetImage
         src={round.imageUrl}
         attribution={{

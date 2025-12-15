@@ -15,7 +15,7 @@ export function StreetImage(props: {
   const { src, overlay, attribution } = props;
 
   return (
-    <div className="relative h-[100svh] w-full overflow-hidden bg-black">
+    <div className="relative h-[100svh] w-full overflow-hidden bg-black touch-none">
       {/* Still image only (no panning/zooming). */}
       <img
         src={src}
