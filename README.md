@@ -1,4 +1,4 @@
-# Geo (Kosovo + Albania)
+# GEOSHQIP
 
 A small GeoGuessr-style game restricted to Kosovo + Albania (NMPZ).
 
